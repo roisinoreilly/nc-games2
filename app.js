@@ -15,7 +15,11 @@ app.use((err, req, res, next) => {
   } else next(err)
      if (err.code === '22P02') {
         res.status(400).send({ msg: 'Bad request' })
-    } else next(err)
+    } else {
+        if (err){
+            res.status(500).send({ msg: 'Internal Server Error!' })
+        }
+    }
 })
 
 module.exports = app;
