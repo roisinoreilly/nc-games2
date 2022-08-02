@@ -49,7 +49,7 @@ describe("GET /api/reviews/:review_id", () => {
               })
         })
     })
-    test("GET:404 sends an appropriate and error message when given a valid but non-existent id", () => {
+    test("GET:404 sends an appropriate error message when given a valid but non-existent review id", () => {
         return request(app)
         .get("/api/reviews/3000")
         .expect(404)
@@ -57,9 +57,82 @@ describe("GET /api/reviews/:review_id", () => {
             expect(response.body.msg).toBe("Review does not exist")
         })
     })
-    test("GET:400 sends an appropriate and error message when given an invalid id", () => {
+    test("GET:400 sends an appropriate error message when given an invalid review id", () => {
         return request(app)
         .get("/api/reviews/banana")
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Bad request")
+        })
+    })
+})
+
+describe("PATCH /api/reviews/:review_id", () => {
+    test("PATCH:200 sends updated review to the client", () => {
+        const reviewVotes = {
+            inc_votes: 100
+        }
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(reviewVotes)
+        .expect(200)
+        .then(({body: {review}}) => {
+            expect(review.votes).toBe(101)
+        })
+    })
+    test("PATCH:404 sends an appropriate error message when given a valid but non-existent review id", () => {
+        const reviewVotes = {
+            inc_votes: 100
+        }
+        return request(app)
+        .patch("/api/reviews/3000")
+        .send(reviewVotes)
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe("Review does not exist")
+        })
+    })
+    test("PATCH:400 sends an appropriate error message when given an invalid review id", () => {
+        const reviewVotes = {
+            inc_votes: 100
+        }
+        return request(app)
+        .patch("/api/reviews/banana")
+        .send(reviewVotes)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Bad request")
+        })
+    })
+    test("PATCH:400 sends an appropriate error message when given an invalid inc_votes object", () => {
+        const reviewVotes = {
+            inc_votes: "banana"
+        }
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(reviewVotes)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Bad request")
+        })
+    })
+    test("PATCH:400 sends an appropriate error message when given an empty request object", () => {
+        const reviewVotes = {}
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(reviewVotes)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Bad request")
+        })
+    })
+    test("PATCH:400 sends error message when given incorrect key on request body", () => {
+        const reviewVotes = {
+            banana: 100
+        }
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(reviewVotes)
         .expect(400)
         .then((response) => {
             expect(response.body.msg).toBe("Bad request")
