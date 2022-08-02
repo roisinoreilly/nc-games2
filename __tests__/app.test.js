@@ -139,3 +139,19 @@ describe("PATCH /api/reviews/:review_id", () => {
         })
     })
 })
+
+describe("GET /api/users", () => {
+    test("GET:200 sends an array of user objects to the client", () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+            const output = response.body.users
+            output.forEach((user) => {
+                expect.objectContaining({username: expect.any(String),
+                name: expect.any(String), avatar_url: expect.any(String)})
+            })
+            expect(output.length).toBeGreaterThan(1)
+        })
+    })
+})
