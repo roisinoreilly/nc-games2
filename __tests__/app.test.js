@@ -35,7 +35,6 @@ describe("GET /api/reviews/:review_id", () => {
         .expect(200)
         .then((response) => {
             const output = response.body.review
-            expect(Object.keys(output).length).toBe(10)
             expect(output).toMatchObject({
                 review_id: 1,
                 title: 'Agricola',
@@ -56,7 +55,6 @@ describe("GET /api/reviews/:review_id", () => {
         .then((response) => {
             const output = response.body.review
             expect(output.hasOwnProperty("comment_count")).toBe(true)
-            expect(Object.keys(output).length).toBe(10)
             expect.objectContaining({"comment_count": "3"})
     })
     })
