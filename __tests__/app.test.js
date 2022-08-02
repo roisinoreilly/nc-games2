@@ -35,7 +35,7 @@ describe("GET /api/reviews/:review_id", () => {
         .expect(200)
         .then((response) => {
             const output = response.body.review
-            expect(Object.keys(output).length).toBe(9)
+            expect(Object.keys(output).length).toBe(10)
             expect(output).toMatchObject({
                 review_id: 1,
                 title: 'Agricola',
@@ -48,6 +48,17 @@ describe("GET /api/reviews/:review_id", () => {
                 votes: 1
               })
         })
+    })
+    test("GET:200 sends a review response object with a comment count key and value", () => {
+        return request(app)
+        .get("/api/reviews/2")
+        .expect(200)
+        .then((response) => {
+            const output = response.body.review
+            expect(output.hasOwnProperty("comment_count")).toBe(true)
+            expect(Object.keys(output).length).toBe(10)
+            expect.objectContaining({"comment_count": "3"})
+    })
     })
     test("GET:404 sends an appropriate error message when given a valid but non-existent review id", () => {
         return request(app)
