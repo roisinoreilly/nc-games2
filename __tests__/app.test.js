@@ -29,7 +29,7 @@ describe("GET /api/categories", () => {
 })
 
 describe("GET /api/reviews/:review_id", () => {
-    test("GET: 200 sends a review object to the client", () => {
+    test("GET:200 sends a review object to the client", () => {
         return request(app)
         .get("/api/reviews/1")
         .expect(200)
@@ -194,5 +194,45 @@ describe("GET /api/reviews", () => {
         .then((response) => {
             expect(response.body.reviews).toBeSortedBy("created_at", {descending: true})
     })
+})
+})
+
+describe("GET /api/reviews/:review_id/comments", () => {
+    test("GET:200 sends an array of comments by review id to the client, or an empty array if there are no comments", () => {
+        return request(app)
+        .get("/api/reviews/3/comments")
+        .expect(200)
+        .then((response) => {
+            const output = response.body.comments
+            if (output.length === 0) {
+                expect(output).toEqual([])
+            }
+            else {
+            output.forEach((comment) => {
+                expect.objectContaining({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number), created_at: expect.toBeDate(), author: expect.any(String),
+                    body: expect.any(String),
+                    review_id: expect.any(Number)})
+                })
+                expect(output.length).toBeGreaterThan(1)
+            }
+        })
+    })
+    test("GET:404 sends an appropriate error message when given a valid but non-existent review id", () => {
+        return request(app)
+        .get("/api/reviews/3000/comments")
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe("Review does not exist")
+        })
+    })
+    test("GET:400 sends an appropriate error message when given an invalid review id", () => {
+        return request(app)
+        .get("/api/reviews/banana/comments")
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Bad request")
+        })
 })
 })
