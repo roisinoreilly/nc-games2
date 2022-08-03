@@ -37,3 +37,18 @@ exports.selectAllReviews = () => {
         return result.rows
     })
 }
+
+exports.selectCommentsByID = (review_id) => {
+    const reviewsByID = db.query(`SELECT review_id FROM reviews WHERE review_id=$1`, [review_id])
+    const commentsbyID = db.query(`SELECT * FROM comments WHERE review_id = $1;`, [review_id])
+
+    return Promise.all([reviewsByID, commentsbyID]).then(([reviewsResults, commentsResults]) => {
+        console.log(commentsResults.rows)
+        
+        if (reviewsResults.rows.length >0 && commentsResults.rows.length >= 0) {
+            return commentsResults.rows
+        } else {
+            return Promise.reject({status: 404, msg: "Review does not exist"})
+        }
+    })
+}
