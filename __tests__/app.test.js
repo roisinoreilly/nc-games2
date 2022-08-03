@@ -180,10 +180,10 @@ describe("GET /api/reviews", () => {
                     review_id: expect.any(String), 
                     category: expect.any(String), 
                     review_img_url: expect.any(String), 
-                    created_at: expect.any(String), 
-                    votes: expect.any(String), 
+                    created_at: expect.toBeDate(), 
+                    votes: expect.any(Number), 
                     designer: expect.any(String), 
-                    comment_count: expect.any(String)})
+                    comment_count: expect.any(Number)})
             })
         })
     })
