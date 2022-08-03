@@ -204,10 +204,6 @@ describe("GET /api/reviews/:review_id/comments", () => {
         .expect(200)
         .then((response) => {
             const output = response.body.comments
-            if (output.length === 0) {
-                expect(output).toEqual([])
-            }
-            else {
             output.forEach((comment) => {
                 expect.objectContaining({
                     comment_id: expect.any(Number),
@@ -216,8 +212,18 @@ describe("GET /api/reviews/:review_id/comments", () => {
                     review_id: expect.any(Number)})
                 })
                 expect(output.length).toBeGreaterThan(1)
-            }
         })
+    })
+    test("GET:200 sends an empty array to the client if there are no comments for a valid review id", () => {
+        return request(app)
+        .get("/api/reviews/1/comments")
+        .expect(200)
+        .then((response) => {
+            const output = response.body.comments
+            expect(output).toEqual([])
+            expect(output.length).toBe(0)
+        })
+            
     })
     test("GET:404 sends an appropriate error message when given a valid but non-existent review id", () => {
         return request(app)
