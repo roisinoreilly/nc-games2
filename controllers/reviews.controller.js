@@ -1,4 +1,4 @@
-const { selectReviewsByID, updateReviewsByID } = require("../models/reviews.model")
+const { selectReviewsByID, updateReviewsByID, selectAllReviews } = require("../models/reviews.model")
 
 exports.getReviewsByID = (req, res, next) => {
     const { review_id } = req.params
@@ -15,4 +15,10 @@ exports.patchReviewsByID = (req, res, next) => {
         res.status(200).send({review})
     })
     .catch(next)
+}
+
+exports.getReviews = (req, res, next) => {
+    selectAllReviews().then((reviews) => {
+        res.status(200).send({reviews})
+    })
 }
