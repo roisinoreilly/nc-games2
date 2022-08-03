@@ -164,3 +164,35 @@ describe("GET /api/users", () => {
         })
     })
 })
+
+describe("GET /api/reviews", () => {
+    test("GET:200 sends an array of review objects to the client", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then((response) => {
+            const output = response.body.reviews
+            expect(output.length).toBeGreaterThan(1)
+            output.forEach((review) => {
+                expect.objectContaining({
+                    owner: expect.any(String), 
+                    title: expect.any(String), 
+                    review_id: expect.any(String), 
+                    category: expect.any(String), 
+                    review_img_url: expect.any(String), 
+                    created_at: expect.any(String), 
+                    votes: expect.any(String), 
+                    designer: expect.any(String), 
+                    comment_count: expect.any(String)})
+            })
+        })
+    })
+    test("GET:200 sends an array of reviews sorted by date in descending order", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then((response) => {
+            expect(response.body.reviews).toBeSortedBy("created_at", {descending: true})
+    })
+})
+})
