@@ -3,7 +3,7 @@ const app = express();
 app.use(express.json());
 
 const { getCategories } = require("./controllers/categories.controller");
-const { getReviewsByID, patchReviewsByID, getReviews, getCommentsByID } = require("./controllers/reviews.controller");
+const { getReviewsByID, patchReviewsByID, getReviews, getCommentsByID, postCommentsByID } = require("./controllers/reviews.controller");
 const { getUsers } = require("./controllers/users.controller");
 const { handleCustomErrors, handlePsqlErrors, handleServerErrors } = require("./errors");
 
@@ -13,6 +13,7 @@ app.patch("/api/reviews/:review_id", patchReviewsByID);
 app.get("/api/users", getUsers);
 app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id/comments", getCommentsByID);
+app.post("/api/reviews/:review_id/comments", postCommentsByID);
 
 app.use(handleCustomErrors);
 app.use(handlePsqlErrors);
