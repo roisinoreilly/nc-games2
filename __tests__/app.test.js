@@ -310,7 +310,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
         .send(testComment)
         .expect(400)
         .then((({body: {msg}}) => {
-            expect(msg).toBe("User not found")
+            expect(msg).toBe("Bad request")
         }))
     })
     test("POST:400 sends an appropriate error message when response body is missing a username property", () => {
@@ -322,12 +322,36 @@ describe("POST /api/reviews/:review_id/comments", () => {
         .send(testComment)
         .expect(400)
         .then((({body: {msg}}) => {
-            expect(msg).toBe("User not found")
+            expect(msg).toBe("Bad request")
         }))
     })
     test("POST:400 sends an appropriate error message when response body is missing a body property", () => {
         const testComment = {
             username: "mallionaire"
+        }
+        return request(app)
+        .post("/api/reviews/1/comments")
+        .send(testComment)
+        .expect(400)
+        .then((({body: {msg}}) => {
+            expect(msg).toBe("Invalid comment")
+        }))
+    })
+    test("POST:400 sends an appropriate error message when response username key is invalid", () => {
+        const testComment= {
+            banana: "mallionaire", body: "test comment"
+        }
+        return request(app)
+        .post("/api/reviews/1/comments")
+        .send(testComment)
+        .expect(400)
+        .then((({body: {msg}}) => {
+            expect(msg).toBe("Bad request")
+        }))
+    })
+    test("POST:400 sends an appropriate error message when response body key is invalid", () => {
+        const testComment= {
+            username: "mallionaire", banana: "test comment"
         }
         return request(app)
         .post("/api/reviews/1/comments")

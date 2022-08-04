@@ -64,7 +64,7 @@ exports.insertCommentByID = (review_id, username, body) => {
     })
     .then((result) => {
         if (result.rows.length === 0) {
-            return Promise.reject({status: 400, msg: "User not found"})
+            return Promise.reject({status: 400, msg: "Bad request"})
         }
         return db.query(`INSERT INTO comments (body, review_id, author)
         VALUES ($1, $2, $3)
