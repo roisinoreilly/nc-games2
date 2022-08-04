@@ -60,21 +60,17 @@ exports.insertCommentByID = (review_id, username, body) => {
         if (result.rows.length === 0) {
             return Promise.reject({status: 404, msg: "Review not found"})
         }
-        else {
-            return db.query(`SELECT username FROM users WHERE username = $1`, [username])
-            .then((result) => {
-                if (result.rows.length === 0) {
-                    return Promise.reject({status: 400, msg: "User not found"})
-                }
-                else {
-                    return db.query(`INSERT INTO comments (body, review_id, author)
-            VALUES ($1, $2, $3)
-            RETURNING *;`, [body, review_id, username])
-            .then((result) => {
-                return result.rows[0]
-            })
-                }
-            })
+        return db.query(`SELECT username FROM users WHERE username = $1`, [username])
+    })
+    .then((result) => {
+        if (result.rows.length === 0) {
+            return Promise.reject({status: 400, msg: "User not found"})
         }
+        return db.query(`INSERT INTO comments (body, review_id, author)
+        VALUES ($1, $2, $3)
+        RETURNING *;`, [body, review_id, username])
+    })
+    .then((result) => {
+        return result.rows[0]
     })
 }
