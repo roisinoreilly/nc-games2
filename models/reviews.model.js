@@ -43,12 +43,38 @@ exports.selectCommentsByID = (review_id) => {
     const commentsbyID = db.query(`SELECT * FROM comments WHERE review_id = $1;`, [review_id])
 
     return Promise.all([reviewsByID, commentsbyID]).then(([reviewsResults, commentsResults]) => {
-        console.log(commentsResults.rows)
-        
         if (reviewsResults.rows.length >0 && commentsResults.rows.length >= 0) {
             return commentsResults.rows
         } else {
             return Promise.reject({status: 404, msg: "Review does not exist"})
+        }
+    })
+}
+
+exports.insertCommentByID = (review_id, username, body) => {
+    if (typeof body != "string" || body.length <1) {
+        return Promise.reject({status: 400, msg: "Invalid comment"})
+    }
+    return db.query(`SELECT review_id FROM reviews WHERE review_id=$1`, [review_id])
+    .then((result) => {
+        if (result.rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Review not found"})
+        }
+        else {
+            return db.query(`SELECT username FROM users WHERE username = $1`, [username])
+            .then((result) => {
+                if (result.rows.length === 0) {
+                    return Promise.reject({status: 400, msg: "User not found"})
+                }
+                else {
+                    return db.query(`INSERT INTO comments (body, review_id, author)
+            VALUES ($1, $2, $3)
+            RETURNING *;`, [body, review_id, username])
+            .then((result) => {
+                return result.rows[0]
+            })
+                }
+            })
         }
     })
 }
