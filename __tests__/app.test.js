@@ -13,7 +13,7 @@ beforeEach(() => {
         return db.end() });
 
 describe("GET /api/categories", () => {
-    test("GET:200 sends an array of teams to the client", () => {
+    test("GET:200 sends an array of categories to the client", () => {
         return request(app)
         .get("/api/categories")
         .expect(200)
@@ -209,7 +209,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
                     comment_id: expect.any(Number),
                     votes: expect.any(Number), created_at: expect.toBeDate(), author: expect.any(String),
                     body: expect.any(String),
-                    review_id: expect.any(Number)})
+                    review_id: expect(3)})
                 })
                 expect(output.length).toBeGreaterThan(1)
         })
