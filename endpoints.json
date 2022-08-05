@@ -75,5 +75,42 @@
         }
       ]
     }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "serves an array of reviews with updated votes",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "author": "bainesface",
+          "review_id": 1,
+          "votes": 20,
+          "created_at": "new Date(1511354613389)",
+          "body": "I loved this game too!"
+        }
+      ]
+    }
+  },
+  "POST /api/reviews/:review_id": {
+    "description": "serves an array of reviews with posted review",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "author": "bainesface",
+          "review_id": 1,
+          "votes": 16,
+          "created_at": "new Date(1511354613389)",
+          "body": "I loved this game too!"
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comments by comment id",
+    "queries": [],
+    "exampleResponse": {}
   }
 }

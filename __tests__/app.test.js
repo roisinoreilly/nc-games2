@@ -484,7 +484,7 @@ describe("GET /api", () => {
         .expect(200)
         .then((response) => {
             const output = response.body
-            expect(Object.keys(output).length).toBe(6)
+            expect(Object.keys(output).length).toBe(9)
         })
     })
 })
