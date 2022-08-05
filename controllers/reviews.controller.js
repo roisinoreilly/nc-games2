@@ -28,6 +28,7 @@ exports.getReviews = (req, res, next) => {
     .catch(next)
 }
 
+
 exports.getCommentsByID = (req, res, next) => {
     const { review_id } = req.params
     selectCommentsByID(review_id).then((comments) => {
