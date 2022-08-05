@@ -187,15 +187,90 @@ describe("GET /api/reviews", () => {
             })
         })
     })
-    test("GET:200 sends an array of reviews sorted by date in descending order", () => {
+    test("GET:200 sends an array of reviews sorted by date in descending order by default", () => {
         return request(app)
         .get("/api/reviews")
         .expect(200)
         .then((response) => {
             expect(response.body.reviews).toBeSortedBy("created_at", {descending: true})
+        })
     })
-})
-})
+    test("GET:200 sends an array of reviews sorted by a valid column", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=review_id")
+        .expect(200)
+        .then((response) => {
+            expect(response.body.reviews).toBeSortedBy("review_id", {descending: true})
+        })
+    })
+    test("GET:200 sends an array of reviews ordered by the query", () => {
+        return request(app)
+        .get("/api/reviews?order_by=asc")
+        .expect(200)
+        .then((response) => {
+            expect(response.body.reviews).toBeSortedBy("created_at", {ascending: true})
+        })
+    })
+    test("GET:200 sends an array of reviews from a given category query", () => {
+        return request(app)
+        .get("/api/reviews?category=dexterity")
+        .expect(200)
+        .then((response) => {
+            const output = response.body.reviews
+            expect(output.length).toBeGreaterThan(0)
+            output.forEach((review) => {
+                expect.objectContaining({
+                    category: "dexterity"
+                })
+            })
+        })
+    })
+    test("GET:200 sends an array of reviews from a chained query", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=votes&order_by=asc&category=social%20deduction")
+        .expect(200)
+        .then((response) => {
+            const output = response.body.reviews
+            expect(output.length).toBeGreaterThan(0)
+            output.forEach((review) => {
+                expect.objectContaining({
+                    category: "social deduction"
+                })
+            })
+        })
+    })
+    test("GET:200 sends an empty array when given a valid query but no results", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=votes&order_by=asc&category=children's%20games")
+        .expect(200)
+        .then((response) => {
+            expect(response.body.reviews).toEqual([])
+        })
+    })
+    test("GET:400 sends an appropriate error message if given an invalid sort by query", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=banana")
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Invalid sort query")
+        })
+    })
+    test("GET:400 sends an appropriate error message if given an invalid order by query", () => {
+        return request(app)
+        .get("/api/reviews?order_by=banana")
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Invalid order query")
+        })
+    })
+    test("GET:404 sends an appropriate error message if given a non existent category", () => {
+        return request(app)
+        .get("/api/reviews?category=banana")
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe("Invalid category")
+        })
+    })
 
 describe("GET /api/reviews/:review_id/comments", () => {
     test("GET:200 sends an array of comments by review id to the client, or an empty array if there are no comments", () => {
@@ -361,4 +436,5 @@ describe("POST /api/reviews/:review_id/comments", () => {
             expect(msg).toBe("Invalid comment")
         }))
     })
+})
 })
