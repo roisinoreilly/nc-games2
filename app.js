@@ -7,6 +7,7 @@ const { deleteCommentById } = require("./controllers/comments.controller");
 const { getReviewsByID, patchReviewsByID, getReviews, getCommentsByID, postCommentsByID } = require("./controllers/reviews.controller");
 const { getUsers } = require("./controllers/users.controller");
 const { handleCustomErrors, handlePsqlErrors, handleServerErrors } = require("./errors");
+const { getAPI } = require("./controllers/api.controller");
 
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewsByID);
@@ -16,6 +17,7 @@ app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id/comments", getCommentsByID);
 app.post("/api/reviews/:review_id/comments", postCommentsByID);
 app.delete('/api/comments/:comment_id', deleteCommentById);
+app.get("/api", getAPI)
 
 app.use(handleCustomErrors);
 app.use(handlePsqlErrors);
