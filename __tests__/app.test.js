@@ -462,3 +462,29 @@ describe("DELETE /api/comments/:comment_id", () => {
         })
     })
 })
+
+describe("GET /api", () => {
+    test("GET:200 sends a status 200", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+    })
+    test("GET:200 sends an endpoints.json file to the client", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+            expect(typeof response.body).toBe("object")
+            expect(Array.isArray(response.body)).toBe(false)
+        })
+    })
+    test("GET:200 endpoints.json contains all valid endpoints", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+            const output = response.body
+            expect(Object.keys(output).length).toBe(6)
+        })
+    })
+})
