@@ -30,10 +30,47 @@ exports.updateReviewsByID = (review_id, reviewPatch) => {
     })
 }
 
-exports.selectAllReviews = () => {
-    return db.query(`SELECT reviews.*, COUNT(comments.review_id) AS comment_count
-    FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id GROUP BY reviews.review_id ORDER BY created_at DESC;`)
-    .then((result) => {
+exports.selectAllReviews = (sort_by, order_by, category) => {
+    if (![
+        'owner',
+        'title',
+        'review_id',
+        'category',
+        'created_at',
+        'votes',
+        'comment_count',
+      ].includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: 'Invalid sort query' });
+      }
+      if (!['asc', 'desc', 'ASC', 'DESC'].includes(order_by)) {
+        return Promise.reject({ status: 400, msg: 'Invalid order query' });
+      }
+      if (category != undefined) {
+        if (!["strategy",
+        "hidden-roles",
+        "dexterity",
+        "push-your-luck",
+        "roll-and-write",
+        "deck-building",
+        "engine-building",
+        "euro game",
+        "social deduction",
+        "children's games"].includes(category)) {
+            return Promise.reject({status: 404, msg: "Invalid category"})
+        }
+      }
+      let queryArray = []
+      let queryString = `SELECT reviews.*, COUNT(comments.review_id) AS comment_count
+      FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id `
+      if (!category) {
+        queryString += `GROUP BY reviews.review_id
+        ORDER BY ${sort_by} ${order_by}`
+      } else {
+        queryString += `WHERE reviews.category=$1 GROUP BY reviews.review_id ORDER BY ${sort_by} ${order_by}`
+        queryArray.push(category)
+      }
+      return db.query(queryString + `;`, queryArray)
+      .then((result) => {
         return result.rows
     })
 }

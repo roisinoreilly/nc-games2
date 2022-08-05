@@ -18,9 +18,14 @@ exports.patchReviewsByID = (req, res, next) => {
 }
 
 exports.getReviews = (req, res, next) => {
-    selectAllReviews().then((reviews) => {
+    const sort_by = req.query.sort_by || "created_at"
+    const order_by = req.query.order_by || "DESC"
+    const category = req.query.category
+
+    selectAllReviews(sort_by, order_by, category).then((reviews) => {
         res.status(200).send({reviews})
     })
+    .catch(next)
 }
 
 exports.getCommentsByID = (req, res, next) => {
