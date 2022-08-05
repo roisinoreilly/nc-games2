@@ -438,3 +438,27 @@ describe("POST /api/reviews/:review_id/comments", () => {
     })
 })
 })
+
+describe("DELETE /api/comments/:comment_id", () => {
+    test("DELETE:204 responds with no content when given a valid comment id", () => {
+        return request(app)
+        .delete("/api/comments/2")
+        .expect(204)
+    })
+    test("DELETE:400 responds with an appropriate error message if given an invalid comment id", () => {
+        return request(app)
+        .delete("/api/comments/banana")
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Invalid request")
+        })
+    })
+    test("DELETE:404 responds with an appropriate error message if given a valid but non existent comment id", () => {
+        return request(app)
+        .delete("/api/comments/30000")
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe("Comment not found")
+        })
+    })
+})
