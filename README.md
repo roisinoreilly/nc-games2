@@ -2,7 +2,7 @@
 
 ## Background
 
-This is an API built for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
+This is an API built for the purpose of accessing application data programmatically, and was built as part of my backend project. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
 ## Installation
 
@@ -14,3 +14,7 @@ In order to run this repository locally, you will need to run `npm install` to i
 - `supertest`
 
 You will then need to create two .env files, .env.test and .env.development and add `PGDATABASE=` followed by the database names found in /db/setup.sql.
+
+This project has been hosted on Heroku here:
+
+`https://roisin-oreilly-nc-games.herokuapp.com/`
