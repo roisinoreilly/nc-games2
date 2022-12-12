@@ -488,3 +488,11 @@ describe("GET /api", () => {
         })
     })
 })
+
+describe("GET /api/users/:username", () => {
+    test("GET:200 sends a status 200", () => {
+        return request(app)
+        .get("/api/users/tickle122")
+        .expect(200)
+    })
+})
