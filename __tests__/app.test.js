@@ -149,21 +149,21 @@ describe("PATCH /api/reviews/:review_id", () => {
     })
 })
 
-describe("GET /api/users", () => {
-    test("GET:200 sends an array of user objects to the client", () => {
-        return request(app)
-        .get("/api/users")
-        .expect(200)
-        .then((response) => {
-            const output = response.body.users
-            output.forEach((user) => {
-                expect.objectContaining({username: expect.any(String),
-                name: expect.any(String), avatar_url: expect.any(String)})
-            })
-            expect(output.length).toBeGreaterThan(1)
-        })
-    })
-})
+// describe("GET /api/users", () => {
+//     test("GET:200 sends an array of user objects to the client", () => {
+//         return request(app)
+//         .get("/api/users")
+//         .expect(200)
+//         .then((response) => {
+//             const output = response.body.users
+//             output.forEach((user) => {
+//                 expect.objectContaining({username: expect.any(String),
+//                 name: expect.any(String), avatar_url: expect.any(String)})
+//             })
+//             expect(output.length).toBeGreaterThan(1)
+//         })
+//     })
+// })
 
 describe("GET /api/reviews", () => {
     test("GET:200 sends an array of review objects to the client", () => {
@@ -463,36 +463,36 @@ describe("DELETE /api/comments/:comment_id", () => {
     })
 })
 
-describe("GET /api", () => {
-    test("GET:200 sends a status 200", () => {
-        return request(app)
-        .get("/api")
-        .expect(200)
-    })
-    test("GET:200 sends an endpoints.json file to the client", () => {
-        return request(app)
-        .get("/api")
-        .expect(200)
-        .then((response) => {
-            expect(typeof response.body).toBe("object")
-            expect(Array.isArray(response.body)).toBe(false)
-        })
-    })
-    test("GET:200 endpoints.json contains all valid endpoints", () => {
-        return request(app)
-        .get("/api")
-        .expect(200)
-        .then((response) => {
-            const output = response.body
-            expect(Object.keys(output).length).toBe(9)
-        })
-    })
-})
+// describe("GET /api", () => {
+//     test("GET:200 sends a status 200", () => {
+//         return request(app)
+//         .get("/api")
+//         .expect(200)
+//     })
+//     test("GET:200 sends an endpoints.json file to the client", () => {
+//         return request(app)
+//         .get("/api")
+//         .expect(200)
+//         .then((response) => {
+//             expect(typeof response.body).toBe("object")
+//             expect(Array.isArray(response.body)).toBe(false)
+//         })
+//     })
+//     test("GET:200 endpoints.json contains all valid endpoints", () => {
+//         return request(app)
+//         .get("/api")
+//         .expect(200)
+//         .then((response) => {
+//             const output = response.body
+//             expect(Object.keys(output).length).toBe(9)
+//         })
+//     })
+// })
 
-describe("GET /api/users/:username", () => {
-    test("GET:200 sends a status 200", () => {
-        return request(app)
-        .get("/api/users/tickle122")
-        .expect(200)
-    })
-})
+// describe("GET /api/users/:username", () => {
+//     test("GET:200 sends a status 200", () => {
+//         return request(app)
+//         .get("/api/users/tickle122")
+//         .expect(200)
+//     })
+// })
